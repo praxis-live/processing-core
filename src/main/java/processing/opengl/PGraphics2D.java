@@ -30,7 +30,7 @@ import processing.core.PShape;
 import processing.core.PShapeSVG;
 
 
-public class PGraphics2D extends PGraphicsOpenGL {
+public abstract class PGraphics2D extends PGraphicsOpenGL {
 
   public PGraphics2D() {
     super();

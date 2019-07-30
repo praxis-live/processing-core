@@ -28,16 +28,16 @@ package processing.core;
 import java.awt.Frame;
 
 // before calling settings() to get displayWidth/Height
-import java.awt.DisplayMode;
+//import java.awt.DisplayMode;
 // handleSettings() and displayDensity()
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
+//import java.awt.GraphicsDevice;
+//import java.awt.GraphicsEnvironment;
 // used to present the fullScreen() warning about Spaces on OS X
-import javax.swing.JOptionPane;
+//import javax.swing.JOptionPane;
 
 // inside runSketch() to warn users about headless
-import java.awt.HeadlessException;
-import java.awt.Toolkit;
+//import java.awt.HeadlessException;
+//import java.awt.Toolkit;
 
 // used by loadImage()
 import java.awt.Image;
@@ -53,7 +53,7 @@ import java.awt.FileDialog;
 import javax.swing.JFileChooser;
 
 // set the look and feel, if specified
-import javax.swing.UIManager;
+//import javax.swing.UIManager;
 
 // used by link()
 import java.awt.Desktop;
@@ -830,7 +830,7 @@ public class PApplet implements PConstants {
    * A dummy frame to keep compatibility with 2.x code
    * and encourage users to update.
    */
-  public Frame frame;
+//  public Frame frame;
 
 
 //  public Frame getFrame() {
@@ -908,7 +908,7 @@ public class PApplet implements PConstants {
 
   boolean fullScreen;
   int display = -1;  // use default
-  GraphicsDevice[] displayDevices;
+//  GraphicsDevice[] displayDevices;
   // Unlike the others above, needs to be public to support
   // the pixelWidth and pixelHeight fields.
   public int pixelDensity = 1;
@@ -950,72 +950,72 @@ public class PApplet implements PConstants {
   void handleSettings() {
     insideSettings = true;
 
-    // Need the list of display devices to be queried already for usage below.
-    // https://github.com/processing/processing/issues/3295
-    // https://github.com/processing/processing/issues/3296
-    // Not doing this from a static initializer because it may cause
-    // PApplet to cache and the values to stick through subsequent runs.
-    // Instead make it a runtime thing and a local variable.
-    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-    GraphicsDevice device = ge.getDefaultScreenDevice();
-    displayDevices = ge.getScreenDevices();
-
-    // Default or unparsed will be -1, spanning will be 0, actual displays will
-    // be numbered from 1 because it's too weird to say "display 0" in prefs.
-    if (display > 0 && display <= displayDevices.length) {
-      device = displayDevices[display-1];
-    }
-    // Set displayWidth and displayHeight for people still using those.
-    DisplayMode displayMode = device.getDisplayMode();
-    displayWidth = displayMode.getWidth();
-    displayHeight = displayMode.getHeight();
+//    // Need the list of display devices to be queried already for usage below.
+//    // https://github.com/processing/processing/issues/3295
+//    // https://github.com/processing/processing/issues/3296
+//    // Not doing this from a static initializer because it may cause
+//    // PApplet to cache and the values to stick through subsequent runs.
+//    // Instead make it a runtime thing and a local variable.
+//    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+//    GraphicsDevice device = ge.getDefaultScreenDevice();
+//    displayDevices = ge.getScreenDevices();
+//
+//    // Default or unparsed will be -1, spanning will be 0, actual displays will
+//    // be numbered from 1 because it's too weird to say "display 0" in prefs.
+//    if (display > 0 && display <= displayDevices.length) {
+//      device = displayDevices[display-1];
+//    }
+//    // Set displayWidth and displayHeight for people still using those.
+//    DisplayMode displayMode = device.getDisplayMode();
+//    displayWidth = displayMode.getWidth();
+//    displayHeight = displayMode.getHeight();
 
     // Here's where size(), fullScreen(), smooth(N) and noSmooth() might
     // be called, conjuring up the demons of various rendering configurations.
     settings();
 
-    if (display == SPAN && platform == MACOSX) {
-      // Make sure "Displays have separate Spaces" is unchecked
-      // in System Preferences > Mission Control
-      Process p = exec("defaults", "read", "com.apple.spaces", "spans-displays");
-      BufferedReader outReader = createReader(p.getInputStream());
-      BufferedReader errReader = createReader(p.getErrorStream());
-      StringBuilder stdout = new StringBuilder();
-      StringBuilder stderr = new StringBuilder();
-      String line = null;
-      try {
-        while ((line = outReader.readLine()) != null) {
-          stdout.append(line);
-        }
-        while ((line = errReader.readLine()) != null) {
-          stderr.append(line);
-        }
-      } catch (IOException e) {
-        printStackTrace(e);
-      }
-
-      int resultCode = -1;
-      try {
-        resultCode = p.waitFor();
-      } catch (InterruptedException e) { }
-
-      String result = trim(stdout.toString());
-      if ("0".equals(result)) {
-        EventQueue.invokeLater(new Runnable() {
-          public void run() {
-            checkLookAndFeel();
-            final String msg =
-              "To use fullScreen(SPAN), first turn off “Displays have separate spaces”\n" +
-              "in System Preferences \u2192 Mission Control. Then log out and log back in.";
-            JOptionPane.showMessageDialog(null, msg, "Apple's Defaults Stink",
-                                          JOptionPane.WARNING_MESSAGE);
-          }
-        });
-      } else if (!"1".equals(result)) {
-        System.err.println("Could not check the status of “Displays have separate spaces.”");
-        System.err.format("Received message '%s' and result code %d.%n", trim(stderr.toString()), resultCode);
-      }
-    }
+//    if (display == SPAN && platform == MACOSX) {
+//      // Make sure "Displays have separate Spaces" is unchecked
+//      // in System Preferences > Mission Control
+//      Process p = exec("defaults", "read", "com.apple.spaces", "spans-displays");
+//      BufferedReader outReader = createReader(p.getInputStream());
+//      BufferedReader errReader = createReader(p.getErrorStream());
+//      StringBuilder stdout = new StringBuilder();
+//      StringBuilder stderr = new StringBuilder();
+//      String line = null;
+//      try {
+//        while ((line = outReader.readLine()) != null) {
+//          stdout.append(line);
+//        }
+//        while ((line = errReader.readLine()) != null) {
+//          stderr.append(line);
+//        }
+//      } catch (IOException e) {
+//        printStackTrace(e);
+//      }
+//
+//      int resultCode = -1;
+//      try {
+//        resultCode = p.waitFor();
+//      } catch (InterruptedException e) { }
+//
+//      String result = trim(stdout.toString());
+//      if ("0".equals(result)) {
+//        EventQueue.invokeLater(new Runnable() {
+//          public void run() {
+//            checkLookAndFeel();
+//            final String msg =
+//              "To use fullScreen(SPAN), first turn off “Displays have separate spaces”\n" +
+//              "in System Preferences \u2192 Mission Control. Then log out and log back in.";
+//            JOptionPane.showMessageDialog(null, msg, "Apple's Defaults Stink",
+//                                          JOptionPane.WARNING_MESSAGE);
+//          }
+//        });
+//      } else if (!"1".equals(result)) {
+//        System.err.println("Could not check the status of “Displays have separate spaces.”");
+//        System.err.format("Received message '%s' and result code %d.%n", trim(stderr.toString()), resultCode);
+//      }
+//    }
 
     insideSettings = false;
   }
@@ -1137,12 +1137,12 @@ public class PApplet implements PConstants {
     if (display != SPAN && (fullScreen || present)) {
       return displayDensity(display);
     }
-    // walk through all displays, use 2 if any display is 2
-    for (int i = 0; i < displayDevices.length; i++) {
-      if (displayDensity(i+1) == 2) {
-        return 2;
-      }
-    }
+//    // walk through all displays, use 2 if any display is 2
+//    for (int i = 0; i < displayDevices.length; i++) {
+//      if (displayDensity(i+1) == 2) {
+//        return 2;
+//      }
+//    }
     // If nobody's density is 2 then everyone is 1
     return 1;
   }
@@ -1151,58 +1151,58 @@ public class PApplet implements PConstants {
   * @param display the display number to check
   */
   public int displayDensity(int display) {
-    if (PApplet.platform == PConstants.MACOSX) {
-      // This should probably be reset each time there's a display change.
-      // A 5-minute search didn't turn up any such event in the Java 7 API.
-      // Also, should we use the Toolkit associated with the editor window?
-      final String javaVendor = System.getProperty("java.vendor");
-      if (javaVendor.contains("Oracle")) {
-        GraphicsDevice device;
-        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-
-        if (display == -1) {
-          device = env.getDefaultScreenDevice();
-
-        } else if (display == SPAN) {
-          throw new RuntimeException("displayDensity() only works with specific display numbers");
-
-        } else {
-          GraphicsDevice[] devices = env.getScreenDevices();
-          if (display > 0 && display <= devices.length) {
-            device = devices[display - 1];
-          } else {
-            if (devices.length == 1) {
-              System.err.println("Only one display is currently known, use displayDensity(1).");
-            } else {
-              System.err.format("Your displays are numbered %d through %d, " +
-                "pass one of those numbers to displayDensity()%n", 1, devices.length);
-            }
-            throw new RuntimeException("Display " + display + " does not exist.");
-          }
-        }
-
-        try {
-          Field field = device.getClass().getDeclaredField("scale");
-          if (field != null) {
-            field.setAccessible(true);
-            Object scale = field.get(device);
-
-            if (scale instanceof Integer && ((Integer)scale).intValue() == 2) {
-              return 2;
-            }
-          }
-        } catch (Exception ignore) { }
-      }
-    } else if (PApplet.platform == PConstants.WINDOWS ||
-        PApplet.platform == PConstants.LINUX) {
-      if (suggestedDensity == -1) {
-        // TODO: detect and return DPI scaling using JNA; Windows has
-        //   a system-wide value, not sure how it works on Linux
-        return 1;
-      } else if (suggestedDensity == 1 || suggestedDensity == 2) {
-        return suggestedDensity;
-      }
-    }
+//    if (PApplet.platform == PConstants.MACOSX) {
+//      // This should probably be reset each time there's a display change.
+//      // A 5-minute search didn't turn up any such event in the Java 7 API.
+//      // Also, should we use the Toolkit associated with the editor window?
+//      final String javaVendor = System.getProperty("java.vendor");
+//      if (javaVendor.contains("Oracle")) {
+//        GraphicsDevice device;
+//        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+//
+//        if (display == -1) {
+//          device = env.getDefaultScreenDevice();
+//
+//        } else if (display == SPAN) {
+//          throw new RuntimeException("displayDensity() only works with specific display numbers");
+//
+//        } else {
+//          GraphicsDevice[] devices = env.getScreenDevices();
+//          if (display > 0 && display <= devices.length) {
+//            device = devices[display - 1];
+//          } else {
+//            if (devices.length == 1) {
+//              System.err.println("Only one display is currently known, use displayDensity(1).");
+//            } else {
+//              System.err.format("Your displays are numbered %d through %d, " +
+//                "pass one of those numbers to displayDensity()%n", 1, devices.length);
+//            }
+//            throw new RuntimeException("Display " + display + " does not exist.");
+//          }
+//        }
+//
+//        try {
+//          Field field = device.getClass().getDeclaredField("scale");
+//          if (field != null) {
+//            field.setAccessible(true);
+//            Object scale = field.get(device);
+//
+//            if (scale instanceof Integer && ((Integer)scale).intValue() == 2) {
+//              return 2;
+//            }
+//          }
+//        } catch (Exception ignore) { }
+//      }
+//    } else if (PApplet.platform == PConstants.WINDOWS ||
+//        PApplet.platform == PConstants.LINUX) {
+//      if (suggestedDensity == -1) {
+//        // TODO: detect and return DPI scaling using JNA; Windows has
+//        //   a system-wide value, not sure how it works on Linux
+//        return 1;
+//      } else if (suggestedDensity == 1 || suggestedDensity == 2) {
+//        return suggestedDensity;
+//      }
+//    }
     return 1;
   }
 
@@ -6457,16 +6457,16 @@ public class PApplet implements PConstants {
    * Call this before using any Swing-related code in PApplet methods.
    */
   static private void checkLookAndFeel() {
-    if (!lookAndFeelCheck) {
-      if (platform == WINDOWS) {
-        // Windows is defaulting to Metal or something else awful.
-        // Which also is not scaled properly with HiDPI interfaces.
-        try {
-          UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) { }
-      }
-      lookAndFeelCheck = true;
-    }
+//    if (!lookAndFeelCheck) {
+//      if (platform == WINDOWS) {
+//        // Windows is defaulting to Metal or something else awful.
+//        // Which also is not scaled properly with HiDPI interfaces.
+//        try {
+//          UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//        } catch (Exception e) { }
+//      }
+//      lookAndFeelCheck = true;
+//    }
   }
 
   /**
@@ -10709,15 +10709,15 @@ public class PApplet implements PConstants {
     }
     */
 
-    // Catch any HeadlessException to provide more useful feedback
-    try {
-      // Call validate() while resize events are in progress
-      Toolkit.getDefaultToolkit().setDynamicLayout(true);
-    } catch (HeadlessException e) {
-      System.err.println("Cannot run sketch without a display. Read this for possible solutions:");
-      System.err.println("https://github.com/processing/processing/wiki/Running-without-a-Display");
-      System.exit(1);
-    }
+//    // Catch any HeadlessException to provide more useful feedback
+//    try {
+//      // Call validate() while resize events are in progress
+//      Toolkit.getDefaultToolkit().setDynamicLayout(true);
+//    } catch (HeadlessException e) {
+//      System.err.println("Cannot run sketch without a display. Read this for possible solutions:");
+//      System.err.println("https://github.com/processing/processing/wiki/Running-without-a-Display");
+//      System.exit(1);
+//    }
 
     // So that the system proxy setting are used by default
     System.setProperty("java.net.useSystemProxies", "true");
@@ -10976,54 +10976,54 @@ public class PApplet implements PConstants {
     g = createPrimaryGraphics();
     surface = g.createSurface();
 
-    // Create fake Frame object to warn user about the changes
+//    // Create fake Frame object to warn user about the changes
     if (g.displayable()) {
-      frame = new Frame() {
-        @Override
-        public void setResizable(boolean resizable) {
-          deprecationWarning("setResizable");
-          surface.setResizable(resizable);
-        }
-
-        @Override
-        public void setVisible(boolean visible) {
-          deprecationWarning("setVisible");
-          surface.setVisible(visible);
-        }
-
-        @Override
-        public void setTitle(String title) {
-          deprecationWarning("setTitle");
-          surface.setTitle(title);
-        }
-
-        @Override
-        public void setUndecorated(boolean ignored) {
-          throw new RuntimeException("'frame' has been removed from Processing 3, " +
-            "use fullScreen() to get an undecorated full screen frame");
-        }
-
-        // Can't override this one because it's called by Window's constructor
-        /*
-        @Override
-        public void setLocation(int x, int y) {
-          deprecationWarning("setLocation");
-          surface.setLocation(x, y);
-        }
-        */
-
-        @Override
-        public void setSize(int w, int h) {
-          deprecationWarning("setSize");
-          surface.setSize(w, h);
-        }
-
-        private void deprecationWarning(String method) {
-          PGraphics.showWarning("Use surface." + method + "() instead of " +
-                                "frame." + method + " in Processing 3");
-          //new Exception(method).printStackTrace(System.out);
-        }
-      };
+//      frame = new Frame() {
+//        @Override
+//        public void setResizable(boolean resizable) {
+//          deprecationWarning("setResizable");
+//          surface.setResizable(resizable);
+//        }
+//
+//        @Override
+//        public void setVisible(boolean visible) {
+//          deprecationWarning("setVisible");
+//          surface.setVisible(visible);
+//        }
+//
+//        @Override
+//        public void setTitle(String title) {
+//          deprecationWarning("setTitle");
+//          surface.setTitle(title);
+//        }
+//
+//        @Override
+//        public void setUndecorated(boolean ignored) {
+//          throw new RuntimeException("'frame' has been removed from Processing 3, " +
+//            "use fullScreen() to get an undecorated full screen frame");
+//        }
+//
+//        // Can't override this one because it's called by Window's constructor
+//        /*
+//        @Override
+//        public void setLocation(int x, int y) {
+//          deprecationWarning("setLocation");
+//          surface.setLocation(x, y);
+//        }
+//        */
+//
+//        @Override
+//        public void setSize(int w, int h) {
+//          deprecationWarning("setSize");
+//          surface.setSize(w, h);
+//        }
+//
+//        private void deprecationWarning(String method) {
+//          PGraphics.showWarning("Use surface." + method + "() instead of " +
+//                                "frame." + method + " in Processing 3");
+//          //new Exception(method).printStackTrace(System.out);
+//        }
+//      };
 
       surface.initFrame(this); //, backgroundColor, displayNum, fullScreen, spanDisplays);
       surface.setTitle(getClass().getSimpleName());
@@ -11064,13 +11064,13 @@ public class PApplet implements PConstants {
 //  }
 
 
-  /** Convenience method, should only be called by PSurface subclasses. */
+//  /** Convenience method, should only be called by PSurface subclasses. */
   static public void hideMenuBar() {
-    if (PApplet.platform == PConstants.MACOSX) {
-      // Call some native code to remove the menu bar on OS X. Not necessary
-      // on Linux and Windows, who are happy to make full screen windows.
-      japplemenubar.JAppleMenuBar.hide();
-    }
+//    if (PApplet.platform == PConstants.MACOSX) {
+//      // Call some native code to remove the menu bar on OS X. Not necessary
+//      // on Linux and Windows, who are happy to make full screen windows.
+//      japplemenubar.JAppleMenuBar.hide();
+//    }
   }
 
 

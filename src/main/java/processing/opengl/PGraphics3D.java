@@ -29,7 +29,7 @@ import processing.core.PShape;
 import processing.core.PShapeOBJ;
 
 
-public class PGraphics3D extends PGraphicsOpenGL {
+public abstract class PGraphics3D extends PGraphicsOpenGL {
 
   public PGraphics3D() {
     super();

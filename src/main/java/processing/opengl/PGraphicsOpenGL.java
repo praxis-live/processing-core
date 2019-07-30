@@ -37,7 +37,7 @@ import java.util.*;
 /**
  * OpenGL renderer.
  */
-public class PGraphicsOpenGL extends PGraphics {
+public abstract class PGraphicsOpenGL extends PGraphics {
   /** Interface between Processing and OpenGL */
   public PGL pgl;
 
@@ -708,10 +708,10 @@ public class PGraphicsOpenGL extends PGraphics {
 
 
   // Factory method
-  protected PGL createPGL(PGraphicsOpenGL pg) {
-    return new PJOGL(pg);
-//    return new PGLES(pg);
-  }
+  protected abstract PGL createPGL(PGraphicsOpenGL pg); //{
+//    return new PJOGL(pg);
+////    return new PGLES(pg);
+//  }
 
 
 /*
@@ -746,9 +746,9 @@ public class PGraphicsOpenGL extends PGraphics {
 
   @Override
   // Java only
-  public PSurface createSurface() {  // ignore
-    return surface = new PSurfaceJOGL(this);
-  }
+  public abstract PSurface createSurface();// {  // ignore
+//    return surface = new PSurfaceJOGL(this);
+//  }
 
 
   public boolean saveImpl(String filename) {
