@@ -10610,7 +10610,10 @@ public class PApplet implements PConstants {
    * </PRE>
    */
   static public void main(final String[] args) {
+    DefaultMainThreadContext mainThread = new DefaultMainThreadContext();
+    setMainThreadContext(mainThread);
     runSketch(args, null);
+    mainThread.run();
   }
 
 
@@ -10647,7 +10650,7 @@ public class PApplet implements PConstants {
     if (sketchArgs != null) {
       args = concat(args, sketchArgs);
     }
-    runSketch(args, null);
+    main(args);
   }
 
 
@@ -10657,6 +10660,11 @@ public class PApplet implements PConstants {
   // also suspecting that these "not showing up" bugs might be EDT issues.
   static public void runSketch(final String[] args,
                                final PApplet constructedSketch) {
+      if (!mainThread().isMainThread()) {
+          mainThread().runLater(() -> runSketch(args, constructedSketch));
+          return;
+      }
+      
 //    EventQueue.invokeLater(new Runnable() {
 //      public void run() {
 //        runSketchEDT(args, constructedSketch);
@@ -15971,4 +15979,62 @@ public class PApplet implements PConstants {
     if (recorder != null) recorder.blend(src, sx, sy, sw, sh, dx, dy, dw, dh, mode);
     g.blend(src, sx, sy, sw, sh, dx, dy, dw, dh, mode);
   }
+  
+  
+    // EXTENSIONS
+  
+    public interface MainThreadContext {
+
+        public void runLater(Runnable task);
+
+        public boolean isMainThread();
+
+    }
+    
+    private static MainThreadContext mainThreadCtxt;
+    
+    public static MainThreadContext mainThread() {
+        return mainThreadCtxt;
+    }
+    
+    public static synchronized void setMainThreadContext(MainThreadContext mainThread) {
+        if (mainThreadCtxt != null) {
+            throw new IllegalStateException("Main thread context already set");
+        }
+        mainThreadCtxt = Objects.requireNonNull(mainThread);
+    }
+
+    private static class DefaultMainThreadContext implements MainThreadContext {
+
+        private final Thread main;
+        private final BlockingQueue<Runnable> queue;
+        
+        private DefaultMainThreadContext() {
+            this.main = Thread.currentThread();
+            this.queue = new LinkedBlockingQueue<>();
+        }
+
+        @Override
+        public void runLater(Runnable task) {
+            queue.add(task);
+        }
+
+        @Override
+        public boolean isMainThread() {
+            return Thread.currentThread() == main;
+        }
+
+        private void run() {
+            while (true) {
+                try {
+                    queue.take().run();
+                } catch (Throwable t) {
+                    System.getLogger(PApplet.class.getName())
+                            .log(System.Logger.Level.ERROR, "", t);
+                }
+            }
+        }
+
+    }
+  
 }
